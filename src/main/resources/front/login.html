@@ -59,7 +59,7 @@
 <div class="main-body">
     <div class="login-main">
         <div class="login-top">
-            <span>LayuiMini后台登录</span>
+            <span>系统登录</span>
             <span class="bg1"></span>
             <span class="bg2"></span>
         </div>
@@ -67,17 +67,17 @@
             <div class="center">
                 <div class="item">
                     <span class="icon icon-2"></span>
-                    <input type="text" name="username" lay-verify="required"  placeholder="请输入登录账号" maxlength="24"/>
+                    <input type="text" name="username" lay-verify="required" lay-reqtext="账号不能为空"  placeholder="请输入登录账号" maxlength="24"/>
                 </div>
 
                 <div class="item">
                     <span class="icon icon-3"></span>
-                    <input type="password" name="password" lay-verify="required"  placeholder="请输入密码" maxlength="20">
+                    <input type="password" name="password" lay-verify="required" lay-reqtext="密码不能为空"  placeholder="请输入密码" maxlength="20">
                     <span class="bind-password icon icon-4"></span>
                 </div>
 
                 <div id="validatePanel" class="item" style="width: 137px;">
-                    <input type="text" name="captcha" placeholder="请输入验证码" maxlength="4">
+                    <input type="text" name="captcha" lay-verify="required" lay-reqtext="验证码不能为空" placeholder="请输入验证码" maxlength="4">
                     <img id="refreshCaptcha" class="validateImg"  src="/captcha/get" >
                 </div>
 
@@ -125,19 +125,6 @@
 
         // 进行登录操作
         form.on('submit(login)', function (data) {
-            data = data.field;
-            if (data.username == '') {
-                layer.msg('用户名不能为空');
-                return false;
-            }
-            if (data.password == '') {
-                layer.msg('密码不能为空');
-                return false;
-            }
-            if (data.captcha == '') {
-                layer.msg('验证码不能为空');
-                return false;
-            }
             layer.msg('登录成功', function () {
                 window.location = '../index.html';
             });

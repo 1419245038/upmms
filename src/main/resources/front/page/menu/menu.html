@@ -196,12 +196,13 @@
                 layer.confirm('确定要删除吗?', function(index){
                     $.post('/sys/menu/del',{id:data.id},function(result){
                         if(result.code===1){
-                            layer.msg("删除成功!");
-                            renderTable();
-                            menuSelectTree.reload();
-                            layer.confirm('菜单已更新，是否刷新页面?', function(index){
-                                parent.location.reload();
-                                layer.close(index);
+                            layer.msg("删除成功!",{time: 800},function (){
+                                renderTable();
+                                menuSelectTree.reload();
+                                layer.confirm('菜单已更新，是否刷新页面?', function(index){
+                                    parent.location.reload();
+                                    layer.close(index);
+                                });
                             });
                         }else{
                             layer.msg(result.msg);
@@ -243,14 +244,15 @@
             console.log(data)
             $.post(url,data.field,function(result){
                 if(result.code===1){
-                    layer.msg("保存成功!");
-                    //关闭窗口
-                    layer.close(mainIndex);
-                    menuSelectTree.reload();
-                    renderTable();
-                    layer.confirm('菜单已更新，是否刷新页面?', function(index){
-                        parent.location.reload();
-                        layer.close(index);
+                    layer.msg("保存成功!",{time: 800},function (){
+                        //关闭窗口
+                        layer.close(mainIndex);
+                        menuSelectTree.reload();
+                        renderTable();
+                        layer.confirm('菜单已更新，是否刷新页面?', function(index){
+                            parent.location.reload();
+                            layer.close(index);
+                        });
                     });
                 }else{
                     layer.msg(result.msg);

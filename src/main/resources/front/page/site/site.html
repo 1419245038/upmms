@@ -87,10 +87,11 @@
         form.on('submit(demo1)', function (data) {
             $.post('/sys/conf/update',data.field,function(result){
                 if(result.code===1){
-                    layer.msg("保存成功!");
-                    layer.confirm('站点信息已更新，是否刷新页面?', function(index){
-                        parent.location.reload();
-                        layer.close(index);
+                    layer.msg("保存成功!",{time: 800},function (){
+                        layer.confirm('站点信息已更新，是否刷新页面?', function(index){
+                            parent.location.reload();
+                            layer.close(index);
+                        });
                     });
                 }else{
                     layer.msg(result.msg);
