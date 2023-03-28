@@ -66,6 +66,52 @@
 
     </div>
 </div>
+
+<!-- 新增或修改弹窗 -->
+<div style="display: none;padding: 5px" id="addOrUpdateWindow">
+    <form class="layui-form layuimini-form" style="width:90%;" id="dataFrm" lay-filter="dataFrm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">父级菜单</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="pid" id="pid" value="0">
+                <ul id="menuSelectTree" class="dtree" data-id="0"></ul>
+                <tip>如要添加的菜单为一级菜单，请不要选择此项</tip>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <input type="hidden" name="id">
+            <label class="layui-form-label required">菜单名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" lay-verify="required" lay-reqtext="菜单名称不能为空" placeholder="请输入菜单名称" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单图标</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="icon" id="icon" value="fa fa-align-justify">
+                <input type="text" name="iconFa" id="iconPicker" lay-filter="iconPicker" value="fa fa-align-justify" autocomplete="off" placeholder="请输入菜单图标" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单url</label>
+            <div class="layui-input-block">
+                <input type="text" name="href" placeholder="请输入菜单url" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input type="number" name="sort" placeholder="请输入排序号" value="" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
+        </div>
+    </form>
+</div>
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
     layui.use(['form', 'table'], function () {
@@ -124,12 +170,12 @@
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加用户',
-                    type: 2,
+                    type: 1,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '../../page/table/add.html',
+                    area: ['60%', '80%'],
+                    content: $("#addOrUpdateWindow"),
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -152,12 +198,12 @@
 
                 var index = layer.open({
                     title: '编辑用户',
-                    type: 2,
+                    type: 1,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '../../page/table/edit.html',
+                    area: ['60%', '80%'],
+                    content: $("#addOrUpdateWindow"),
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
