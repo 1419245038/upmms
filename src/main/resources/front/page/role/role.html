@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../../lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../../css/public.css" media="all">
+    <link rel="stylesheet" href="../../layui_ext/dtree/dtree.css">
+    <link rel="stylesheet" href="../../layui_ext/dtree/font/dtreefont.css">
 </head>
 <body>
 <div class="layuimini-container">
@@ -72,6 +74,12 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">角色权限</label>
+            <div class="layui-input-block">
+                <ul id="menuSelectTree" class="dtree" data-id="0"></ul>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
             </div>
@@ -80,13 +88,27 @@
 </div>
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.extend({
+        dtree:'../../layui_ext/dtree/dtree'
+    }).use(['dtree','form', 'table'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
+        var dtree = layui.dtree;
 
         var url="";
         var mainIndex;
+
+        var menuSelectTree =  dtree.render({
+            elem: "#menuSelectTree",//绑定ul标签的ID属性值
+            url: "/sys/menu/parant", //请求地址
+            dataStyle: "layuiStyle",  //使用layui风格的数据格式
+            dataFormat: "list",  //配置data的风格为list
+            response:{message:"msg",statusCode:1},  //修改response中返回数据的定义
+            checkbar: true,
+            checkbarType: "no-all",
+            skin: "laySimple"  // laySimple主题风格
+        });
 
         var tableIns = table.render({
             elem: '#currentTableId',
@@ -146,6 +168,7 @@
                     content: $("#addOrUpdateWindow"),
                     success: function () {
                         $("#dataFrm")[0].reset();
+                        menuSelectTree.reload();
                         url = "/sys/role/add";
                     }
                 });
@@ -197,6 +220,18 @@
                     success: function () {
                         //数据回显
                         form.val("dataFrm",data);
+                        menuSelectTree.reload();
+                        $.post('/sys/roleMenu/get',data,function(result){
+                            if(result.code===1){
+                                if(result.data!=null && result.data!==''){
+                                    setTimeout(function (){
+                                        dtree.chooseDataInit("menuSelectTree",result.data); // 回显选中
+                                        // 反选半选状态
+                                        dtree.initNoAllCheck("menuSelectTree");
+                                    },1)
+                                }
+                            }
+                        },"json");
                         //添加的提交请求
                         url = "/sys/role/update";
                     }
@@ -221,9 +256,16 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            console.log(data.field)
-            console.log(url)
-            $.post(url,data.field,function(result){
+            var params = dtree.getCheckbarNodesParam("menuSelectTree");
+            var param = "";
+            for(var i=0;i<params.length;i++){
+                if (i<params.length-1){
+                    param+=params[i].nodeId+","
+                }else{
+                    param+=params[i].nodeId
+                }
+            }
+            $.post(url,{...data.field,"menuSelectTree_select_nodeId":param},function(result){
                 if(result.code===1){
                     layer.msg("保存成功!",{time: 800},function (){
                         //关闭窗口

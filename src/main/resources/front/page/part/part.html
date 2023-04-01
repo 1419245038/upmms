@@ -19,27 +19,21 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户姓名</label>
+                            <label class="layui-form-label">党组织名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input type="text" name="partTitle" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户性别</label>
+                            <label class="layui-form-label">党组织地址</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="sex" autocomplete="off" class="layui-input">
+                                <input type="text" name="partAddr" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户城市</label>
+                            <label class="layui-form-label">党组织描述</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="city" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户职业</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="classify" autocomplete="off" class="layui-input">
+                                <input type="text" name="partDesc" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -66,54 +60,85 @@
 
     </div>
 </div>
+
+<!-- 新增或修改弹窗 -->
+<div style="display: none;padding: 5px" id="addOrUpdateWindow">
+    <form class="layui-form layuimini-form" style="width:90%;" id="dataFrm" lay-filter="dataFrm">
+        <div class="layui-form-item">
+            <input type="hidden" name="partId">
+            <label class="layui-form-label required">党组织名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="partTitle" lay-verify="required" lay-reqtext="党组织名称不能为空" placeholder="请输入党组织名称" autocomplete="off" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">党组织地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="partAddr" lay-verify="required" lay-reqtext="党组织地址不能为空" placeholder="请输入党组织名称" autocomplete="off" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">党组织描述</label>
+            <div class="layui-input-block">
+                <input type="text" name="partDesc" placeholder="请输入党组织描述" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
+        </div>
+    </form>
+</div>
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
+        var url="";
+        var mainIndex;
 
-        table.render({
+        var tableIns = table.render({
             elem: '#currentTableId',
-            url: 'api/table.json',
+            url: '/adm/part/get',
+            response:{message:"msg",statusCode:1},
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 80, title: 'ID', sort: true},
-                {field: 'username', width: 80, title: '用户名'},
-                {field: 'sex', width: 80, title: '性别', sort: true},
-                {field: 'city', width: 80, title: '城市'},
-                {field: 'sign', title: '签名', minWidth: 150},
-                {field: 'experience', width: 80, title: '积分', sort: true},
-                {field: 'score', width: 80, title: '评分', sort: true},
-                {field: 'classify', width: 80, title: '职业'},
-                {field: 'wealth', width: 135, title: '财富', sort: true},
+                {type: 'numbers',title: '序号'},
+                {field: 'partTitle', title: '党组织名称'},
+                {field: 'partAddr', title: '党组织地址'},
+                {field: 'partDesc', title: '党组织描述'},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
             page: true,
-            skin: 'line'
+            skin: 'line',
+            done: function (res, curr, count) {
+                //判断当前页码是否是大于1并且当前页的数据量为0
+                if (curr > 1 && res.data.length === 0) {
+                    var pageValue = curr - 1;
+                    //刷新数据表格的数据
+                    tableIns.reload({
+                        page: {curr: pageValue}
+                    });
+                }
+            }
         });
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
-
             //执行搜索重载
-            table.reload('currentTableId', {
+            tableIns.reload({
+                url:"/adm/part/search",
+                where: data.field,
                 page: {
                     curr: 1
                 }
-                , where: {
-                    searchParams: result
-                }
-            }, 'data');
-
+            });
             return false;
         });
 
@@ -122,53 +147,99 @@
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
+                mainIndex = layer.open({
                     title: '添加用户',
-                    type: 2,
+                    type: 1,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '../../page/table/add.html',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
+                    area: ['60%', '80%'],
+                    content: $("#addOrUpdateWindow"),
+                    success: function () {
+                        $("#dataFrm")[0].reset();
+                        url = "/adm/part/add";
+                    }
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                layer.confirm('确定要删除吗?', function (index) {
+                    var param = "";
+                    for(var i=0;i<data.length;i++){
+                        if (i<data.length-1){
+                            param+=data[i].partId+","
+                        }else{
+                            param+=data[i].partId
+                        }
+                    }
+                    console.log(param)
+                    $.post('/adm/part/delByIds',{"ids":param},function(result){
+                        if(result.code===1){
+                            layer.msg("删除成功!",{time: 800},function (){
+                                tableIns.reload()
+                            });
+                        }else{
+                            layer.msg(result.msg);
+                        }
+                    },"json");
+                    layer.close(index);
+                });
             }
-        });
-
-        //监听表格复选框选择
-        table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
 
-                var index = layer.open({
+                mainIndex = layer.open({
                     title: '编辑用户',
-                    type: 2,
+                    type: 1,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '../../page/table/edit.html',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
+                    area: ['60%', '80%'],
+                    content: $("#addOrUpdateWindow"),
+                    success: function () {
+                        //数据回显
+                        form.val("dataFrm",data);
+                        //添加的提交请求
+                        url = "/adm/part/update";
+                    }
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
+                layer.confirm('确定要删除吗?', function (index) {
+                    console.log(data)
+                    $.post('/adm/part/delById',data,function(result){
+                        if(result.code===1){
+                            layer.msg("删除成功!",{time: 800},function (){
+                                obj.del();
+                            });
+                        }else{
+                            layer.msg(result.msg);
+                        }
+                    },"json");
                     layer.close(index);
                 });
             }
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            console.log(data.field)
+            $.post(url,data.field,function(result){
+                if(result.code===1){
+                    layer.msg("保存成功!",{time: 800},function (){
+                        //关闭窗口
+                        layer.close(mainIndex);
+                        tableIns.reload()
+                    });
+                }else{
+                    layer.msg(result.msg);
+                }
+            },"json");
+            //禁止页面刷新
+            return false;
         });
 
     });

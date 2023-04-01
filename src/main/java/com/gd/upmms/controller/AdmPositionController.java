@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -39,10 +40,7 @@ public class AdmPositionController {
 
     @RequestMapping("delByIds")
     public R<String> delByIds(String ids){
-        List<String> ids1=new ArrayList<>();
-        for (String id : ids.split(",")) {
-            ids1.add(id);
-        }
+        List<String> ids1 = new ArrayList<>(Arrays.asList(ids.split(",")));
         boolean removeByIds = admPositionService.removeByIds(ids1);
         return removeByIds?R.success("删除成功!"):R.error("删除失败!");
     }

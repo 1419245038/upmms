@@ -33,4 +33,11 @@ public class GlobalExceptionHandler {
         log.info(message);
         return R.error(message);
     }
+
+    @ExceptionHandler(Exception.class)
+    public R<String> exceptionHandler(Exception exception){
+        String message = exception.getMessage();
+        log.info(message);
+        return R.error(message);
+    }
 }
