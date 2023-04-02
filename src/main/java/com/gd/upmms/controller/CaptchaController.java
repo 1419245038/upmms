@@ -1,7 +1,7 @@
 package com.gd.upmms.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
-import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.captcha.ShearCaptcha;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,10 +18,10 @@ public class CaptchaController {
     @RequestMapping("/get")
     public void get(HttpServletRequest request,HttpServletResponse httpServletResponse) throws IOException {
         HttpSession session = request.getSession();
-        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(96, 37);
-        session.setAttribute("captcha",lineCaptcha.getCode());
+        ShearCaptcha shearCaptcha = CaptchaUtil.createShearCaptcha(95, 37, 4, 4);
+        session.setAttribute("captcha",shearCaptcha.getCode());
         ServletOutputStream outputStream=httpServletResponse.getOutputStream();
-        lineCaptcha.write(outputStream);
+        shearCaptcha.write(outputStream);
         outputStream.close();
     }
 }

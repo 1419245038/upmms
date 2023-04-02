@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface SysMenuService extends IService<SysMenu> {
 
-    public List<SysMenuDto> findAll();
+    List<SysMenuDto> findAll();
+
+    List<SysMenuDto> findByUserId(Integer userId);
 
 }

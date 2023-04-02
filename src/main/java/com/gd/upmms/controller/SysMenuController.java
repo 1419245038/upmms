@@ -2,6 +2,7 @@ package com.gd.upmms.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gd.upmms.common.BaseContext;
 import com.gd.upmms.common.CustomException;
 import com.gd.upmms.common.R;
 import com.gd.upmms.dto.SysMenuDto;
@@ -58,7 +59,10 @@ public class SysMenuController {
             logoInfo.put("image","images/logo/logo.png");
             logoInfo.put("href","");
         }
-        map.put("menuInfo", TreeUtil.toTree(sysMenuService.findAll(),0));
+
+
+
+        map.put("menuInfo", TreeUtil.toTree(sysMenuService.findByUserId(BaseContext.getCurrentId()),0));
         map.put("homeInfo",homeInfo);
         map.put("logoInfo",logoInfo);
 

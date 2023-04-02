@@ -2,10 +2,13 @@ package com.gd.upmms.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gd.upmms.common.CustomException;
 import com.gd.upmms.common.R;
 import com.gd.upmms.entity.AdmPart;
+import com.gd.upmms.entity.AdmPartUser;
 import com.gd.upmms.entity.AdmPosition;
 import com.gd.upmms.service.AdmPartService;
+import com.gd.upmms.service.AdmPartUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +24,9 @@ public class AdmPartController {
     @Autowired
     private AdmPartService admPartService;
 
+    @Autowired
+    private AdmPartUserService admPartUserService;
+
     @RequestMapping("/get")
     public R<List<AdmPart>> get(){
         List<AdmPart> list = admPartService.list();
@@ -35,6 +41,12 @@ public class AdmPartController {
 
     @RequestMapping("/delById")
     public R<String> del(Integer partId){
+        LambdaQueryWrapper<AdmPartUser> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(AdmPartUser::getPartId,partId);
+        int count = admPartUserService.count(queryWrapper);
+        if (count>0){
+            throw new CustomException("此党组织下存在用户,不能删除!");
+        }
         boolean remove = admPartService.removeById(partId);
         return remove?R.success("删除成功!"):R.success("删除失败!");
     }
@@ -48,6 +60,12 @@ public class AdmPartController {
     @RequestMapping("delByIds")
     public R<String> delByIds(String ids){
         List<String> ids1 = new ArrayList<>(Arrays.asList(ids.split(",")));
+        LambdaQueryWrapper<AdmPartUser> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.in(AdmPartUser::getPartId,ids1);
+        int count = admPartUserService.count(queryWrapper);
+        if (count>0){
+            throw new CustomException("此党组织下存在用户,不能删除!");
+        }
         boolean removeByIds = admPartService.removeByIds(ids1);
         return removeByIds?R.success("删除成功!"):R.error("删除失败!");
     }

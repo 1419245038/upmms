@@ -212,7 +212,7 @@
                     console.log(data)
                     $.post('/adm/part/delById',data,function(result){
                         if(result.code===1){
-                            layer.msg("删除成功!",{time: 800},function (){
+                            layer.msg("删除成功!",{icon:1,time: 200},function (){
                                 obj.del();
                             });
                         }else{

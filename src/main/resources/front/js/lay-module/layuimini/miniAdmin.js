@@ -45,6 +45,11 @@ layui.define(["jquery", "miniMenu", "element","miniTab", "miniTheme"], function 
                 if (data == null) {
                     miniAdmin.error('暂无菜单信息')
                 } else {
+                    if (data.msg==='NOTLOGIN'){
+                        layer.msg("未登录",{icon:2,time: 500},function () {
+                            window.location = 'login.html'
+                        })
+                    }
                     miniAdmin.renderLogo(data.logoInfo);
                     miniAdmin.renderClear(options.clearUrl);
                     miniAdmin.renderHome(data.homeInfo);

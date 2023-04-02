@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 
 @Slf4j
-//@WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
+@WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
 public class LoginCheckFilter implements Filter {
 
     //路径匹配器
@@ -38,10 +38,10 @@ public class LoginCheckFilter implements Filter {
 
         //定义不需要拦截的uri数组
         String[] uris = new String[]{
-                "/employee/login",
-                "/employee/logout",
-                "/backend/**",
-                "/front/**"
+                "/sys/login",
+                "/sys/logout",
+                "/front/**",
+                "/captcha/get"
         };
 
         if (check(uris, requestURI)) {
@@ -50,11 +50,11 @@ public class LoginCheckFilter implements Filter {
             return;
         }
 
-        Long empId = (Long) request.getSession().getAttribute("employee");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
 
-        if (empId != null) {
+        if (userId != null) {
             log.info("{}用户已登录，放行", requestURI);
-            BaseContext.setCurrentId(empId);
+            BaseContext.setCurrentId(userId);
             filterChain.doFilter(request, response);
             return;
         }

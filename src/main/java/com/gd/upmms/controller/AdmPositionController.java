@@ -2,9 +2,12 @@ package com.gd.upmms.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gd.upmms.common.CustomException;
 import com.gd.upmms.common.R;
 import com.gd.upmms.entity.AdmPosition;
+import com.gd.upmms.entity.AdmPositionUser;
 import com.gd.upmms.service.AdmPositionService;
+import com.gd.upmms.service.AdmPositionUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +23,9 @@ public class AdmPositionController {
     @Autowired
     private AdmPositionService admPositionService;
 
+    @Autowired
+    private AdmPositionUserService admPositionUserService;
+
     @RequestMapping("get")
     public R<List<AdmPosition>> get(){
         List<AdmPosition> list = admPositionService.list();
@@ -34,6 +40,12 @@ public class AdmPositionController {
 
     @RequestMapping("delById")
     public R<String> delById(Integer positionId){
+        LambdaQueryWrapper<AdmPositionUser> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(AdmPositionUser::getPositionId,positionId);
+        int count = admPositionUserService.count(queryWrapper);
+        if (count>0){
+            throw new CustomException("此职务关联了用户,不能删除!");
+        }
         boolean remove = admPositionService.removeById(positionId);
         return remove?R.success("删除成功!"):R.error("删除失败!");
     }
@@ -41,6 +53,12 @@ public class AdmPositionController {
     @RequestMapping("delByIds")
     public R<String> delByIds(String ids){
         List<String> ids1 = new ArrayList<>(Arrays.asList(ids.split(",")));
+        LambdaQueryWrapper<AdmPositionUser> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.in(AdmPositionUser::getPositionId,ids1);
+        int count = admPositionUserService.count(queryWrapper);
+        if (count>0){
+            throw new CustomException("此职务关联了用户,不能删除!");
+        }
         boolean removeByIds = admPositionService.removeByIds(ids1);
         return removeByIds?R.success("删除成功!"):R.error("删除失败!");
     }

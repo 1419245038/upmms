@@ -225,7 +225,7 @@
             console.log(url)
             $.post(url,data.field,function(result){
                 if(result.code===1){
-                    layer.msg("保存成功!",{time: 800},function (){
+                    layer.msg("保存成功!",{icon:1,time: 200},function (){
                         //关闭窗口
                         layer.close(mainIndex);
                         tableIns.reload()
