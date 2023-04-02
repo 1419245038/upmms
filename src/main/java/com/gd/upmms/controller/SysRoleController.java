@@ -2,11 +2,14 @@ package com.gd.upmms.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gd.upmms.common.CustomException;
 import com.gd.upmms.common.R;
 import com.gd.upmms.entity.SysRole;
 import com.gd.upmms.entity.SysRoleMenu;
+import com.gd.upmms.entity.SysRoleUser;
 import com.gd.upmms.service.SysRoleMenuService;
 import com.gd.upmms.service.SysRoleService;
+import com.gd.upmms.service.SysRoleUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +29,9 @@ public class SysRoleController {
     @Autowired
     private SysRoleMenuService sysRoleMenuService;
 
+    @Autowired
+    private SysRoleUserService sysRoleUserService;
+
     @RequestMapping("/get")
     public R<List<SysRole>> get(){
         return R.success(sysRoleService.list());
@@ -34,6 +40,12 @@ public class SysRoleController {
     @RequestMapping("/delById")
     @Transactional//开启事务
     public R<String> delById(Integer roleId){
+        LambdaQueryWrapper<SysRoleUser> roleUserQueryWrapper=new LambdaQueryWrapper<>();
+        roleUserQueryWrapper.eq(SysRoleUser::getRoleId,roleId);
+        int count = sysRoleUserService.count(roleUserQueryWrapper);
+        if (count>0){
+            throw new CustomException("该角色关联了用户,不可删除!");
+        }
         boolean remove_role = sysRoleService.removeById(roleId);
         LambdaQueryWrapper<SysRoleMenu> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(SysRoleMenu::getRoleId,roleId);
@@ -45,6 +57,12 @@ public class SysRoleController {
     @Transactional//开启事务
     public R<String> delByIds(String ids){
         List<String> ids1 = new ArrayList<>(Arrays.asList(ids.split(",")));
+        LambdaQueryWrapper<SysRoleUser> roleUserQueryWrapper=new LambdaQueryWrapper<>();
+        roleUserQueryWrapper.in(SysRoleUser::getRoleId,ids1);
+        int count = sysRoleUserService.count(roleUserQueryWrapper);
+        if (count>0){
+            throw new CustomException("该角色关联了用户,不可删除!");
+        }
         boolean remove_roles = sysRoleService.removeByIds(ids1);
         LambdaQueryWrapper<SysRoleMenu> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.in(SysRoleMenu::getRoleId,ids1);

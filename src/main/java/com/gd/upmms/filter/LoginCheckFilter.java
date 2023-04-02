@@ -30,6 +30,7 @@ public class LoginCheckFilter implements Filter {
 
         //定义不需要拦截的uri数组
         String[] uris = new String[]{
+                "/",
                 "/sys/login",
                 "/sys/logout",
                 "/front/**",

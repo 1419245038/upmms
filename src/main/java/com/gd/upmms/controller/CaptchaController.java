@@ -2,6 +2,7 @@ package com.gd.upmms.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ShearCaptcha;
+import cn.hutool.captcha.generator.RandomGenerator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,10 +19,11 @@ public class CaptchaController {
     @RequestMapping("/get")
     public void get(HttpServletRequest request,HttpServletResponse httpServletResponse) throws IOException {
         HttpSession session = request.getSession();
-        ShearCaptcha shearCaptcha = CaptchaUtil.createShearCaptcha(95, 37, 4, 4);
-        session.setAttribute("captcha",shearCaptcha.getCode());
+        ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(96, 37, 4, 2);
+        captcha.setGenerator(new RandomGenerator("0123456789", 4));
+        session.setAttribute("captcha",captcha.getCode());
         ServletOutputStream outputStream=httpServletResponse.getOutputStream();
-        shearCaptcha.write(outputStream);
+        captcha.write(outputStream);
         outputStream.close();
     }
 }
