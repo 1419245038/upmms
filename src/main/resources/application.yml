@@ -18,6 +18,6 @@ mybatis-plus:
     db-config:
       id-type: auto
 
-takeout:
+upmms:
   img:
-    path: /Users/zhupenghe/desktop/takeout_img/
+    path: D:/upmms/images

@@ -39,8 +39,22 @@
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label required">站点logo</label>
+<!--                <div class="layui-input-block">-->
+<!--                    <input type="text" name="logoImage" lay-verify="required" lay-reqtext="站点logo不能为空" autocomplete="off" placeholder="请输入站点logo" class="layui-input">-->
+<!--                </div>-->
                 <div class="layui-input-block">
-                    <input type="text" name="logoImage" lay-verify="required" lay-reqtext="站点logo不能为空" autocomplete="off" placeholder="请输入站点logo" class="layui-input">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test1">上传图片</button>
+                        <div class="layui-upload-list">
+                            <img style="width: 92px;height: 92px" class="layui-upload-img" id="demo1">
+                            <p id="demoText"></p>
+                        </div>
+                        <div style="width: 95px;">
+                            <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                                <div class="layui-progress-bar" lay-percent=""></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -66,16 +80,70 @@
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
-    layui.use(['form'], function () {
-        var $ = layui.jquery;
-        var form = layui.form
-            , layer = layui.layer;
+    layui.use(['form','upload','element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            element = layui.element,
+            layer = layui.layer,
+            upload = layui.upload,
+            logo_image = '/common/download?name=';
+
+        //图片上传
+        var uploadInst = upload.render({
+            elem: '#test1',
+            url: '/common/upload', //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+            before: function(obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+
+                element.progress('demo', '0%'); //进度条复位
+                layer.msg('上传中', {
+                    icon: 16,
+                    time: 0
+                });
+            },
+            done: function(res) {
+                //如果上传失败
+                if (res.code === 0) {
+                    return layer.msg('上传失败');
+                }
+                //如果上传成功
+                if (res.code === 1){
+                    logo_image+=res.data
+                }
+                $('#demoText').html(''); //置空上传失败的状态
+            },
+            error: function() {
+                //失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function() {
+                    uploadInst.upload();
+                });
+            },
+            //进度条
+            progress: function(n, elem, e) {
+                element.progress('demo', n + '%');
+                if (n === 100) {
+                    layer.msg('上传完毕', {
+                        icon: 1
+                    });
+                }
+            }
+        });
 
         $(function(){
             $.post('/sys/conf/get',function(result){
                 console.log(result)
                 if(result.code===1){
                     form.val("dataFrm",result.data)
+                    if(result.data.logoImage === '/common/download?name='){
+                        $('#demo1').attr('src','../../images/logo/logo.png');
+                    }else{
+                        $('#demo1').attr('src',result.data.logoImage);
+                    }
                 }else{
                     layer.msg(result.msg);
                 }
@@ -85,7 +153,7 @@
 
         //监听提交
         form.on('submit(demo1)', function (data) {
-            $.post('/sys/conf/update',data.field,function(result){
+            $.post('/sys/conf/update',{...data.field,"logoImage":logo_image},function(result){
                 if(result.code===1){
                     layer.msg("保存成功!",{time: 800},function (){
                         layer.confirm('站点信息已更新，是否刷新页面?', function(index){

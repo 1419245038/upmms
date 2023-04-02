@@ -19,27 +19,33 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">身份证号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="idNumber" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">手机号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="phoneNumber" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">用户姓名</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="username" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户性别</label>
+                            <label class="layui-form-label">用户住址</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="sex" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户城市</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="city" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户职业</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="classify" autocomplete="off" class="layui-input">
+                                <input type="text" name="address" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -71,39 +77,71 @@
 <div style="display: none;padding: 5px" id="addOrUpdateWindow">
     <form class="layui-form layuimini-form" style="width:90%;" id="dataFrm" lay-filter="dataFrm">
         <div class="layui-form-item">
-            <label class="layui-form-label">父级菜单</label>
+            <input type="hidden" name="userId">
+            <label class="layui-form-label required">用户名</label>
             <div class="layui-input-block">
-                <input type="hidden" name="pid" id="pid" value="0">
-                <ul id="menuSelectTree" class="dtree" data-id="0"></ul>
-                <tip>如要添加的菜单为一级菜单，请不要选择此项</tip>
+                <input type="text" name="username" autocomplete="off" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value="" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <input type="hidden" name="id">
-            <label class="layui-form-label required">菜单名称</label>
+            <label class="layui-form-label required">邮箱</label>
             <div class="layui-input-block">
-                <input type="text" name="title" lay-verify="required" lay-reqtext="菜单名称不能为空" placeholder="请输入菜单名称" value="" class="layui-input">
+                <input type="text" name="email" autocomplete="off" lay-verify="required|email" lay-reqtext="邮箱不能为空" placeholder="请输入邮箱" value="" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">菜单图标</label>
+            <label class="layui-form-label required">身份证号</label>
             <div class="layui-input-block">
-                <input type="hidden" name="icon" id="icon" value="fa fa-align-justify">
-                <input type="text" name="iconFa" id="iconPicker" lay-filter="iconPicker" value="fa fa-align-justify" autocomplete="off" placeholder="请输入菜单图标" class="layui-input">
+                <input type="text" name="idNumber" autocomplete="off" lay-verify="required" lay-reqtext="身份号不能为空" placeholder="请输入身份证号" value="" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">菜单url</label>
+            <label class="layui-form-label required">手机号</label>
             <div class="layui-input-block">
-                <input type="text" name="href" placeholder="请输入菜单url" value="" class="layui-input">
+                <input type="tel" name="phoneNumber" autocomplete="off" lay-verify="required|phone" lay-reqtext="手机号不能为空" placeholder="请输入手机号" value="" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">排序</label>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">性别</label>
             <div class="layui-input-block">
-                <input type="number" name="sort" placeholder="请输入排序号" value="" class="layui-input">
+                <select name="sex">
+                    <option value=""></option>
+                    <option value="1">男</option>
+                    <option value="2">女</option>
+                </select>
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">家庭住址</label>
+            <div class="layui-input-block">
+                <input type="text" name="address" autocomplete="off" lay-verify="required" lay-reqtext="家庭住址不能为空" placeholder="请输入家庭住址" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属党组织</label>
+            <div class="layui-input-block">
+                <select id="part_select" name="partId">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">职务</label>
+            <div class="layui-input-block">
+                <select id="position_select" name="positionId">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-block">
+                <select id="role_select" name="roleId">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+
 
         <div class="layui-form-item">
             <div class="layui-input-block">
@@ -119,22 +157,62 @@
             form = layui.form,
             table = layui.table;
 
-        table.render({
+        var url="";
+        var mainIndex;
+
+        //初始化下拉列表
+        $(function(){
+            //初始化党组织下拉列表
+            $.post('/adm/part/get',function(result){
+                if (result.code===1){
+                    var data=result.data
+                    $.each(data,function(index,item){
+                        $('#part_select').append(new Option(item.partTitle,item.partId));//往下拉菜单里添加元素
+                    })
+                    form.render();//重载表单
+                }
+            },"json");
+            //初始化职务下拉列表
+            $.post('/adm/position/get',function(result){
+                if (result.code===1){
+                    var data=result.data
+                    $.each(data,function(index,item){
+                        $('#position_select').append(new Option(item.positionTitle,item.positionId));//往下拉菜单里添加元素
+                    })
+                    form.render();//重载表单
+                }
+            },"json");
+            //初始化角色下拉列表
+            $.post('/sys/role/get',function(result){
+                if (result.code===1){
+                    var data=result.data
+                    $.each(data,function(index,item){
+                        $('#role_select').append(new Option(item.roleName,item.roleId));//往下拉菜单里添加元素
+                    })
+                    form.render();//重载表单
+                }
+            },"json");
+        })
+
+        var tableIns = table.render({
             elem: '#currentTableId',
-            url: 'api/table.json',
+            url: '/sys/user/get',
+            response:{message:"msg",statusCode:1},
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
-                {type: "checkbox", width: 50},
-                {field: 'id', width: 80, title: 'ID', sort: true},
-                {field: 'username', width: 80, title: '用户名'},
-                {field: 'sex', width: 80, title: '性别', sort: true},
-                {field: 'city', width: 80, title: '城市'},
-                {field: 'sign', title: '签名', minWidth: 150},
-                {field: 'experience', width: 80, title: '积分', sort: true},
-                {field: 'score', width: 80, title: '评分', sort: true},
-                {field: 'classify', width: 80, title: '职业'},
-                {field: 'wealth', width: 135, title: '财富', sort: true},
+                {type: "checkbox"},
+                {type: 'numbers',title: '序号'},
+                {field: 'username', title: '用户名'},
+                {field: 'email', title: '邮箱'},
+                {field: 'idNumber', title: '身份证号'},
+                {field: 'phoneNumber', title: '手机号'},
+                {field: 'sex', templet: function (d) {
+                        return d.sex===1?"男":"女";
+                    }, title: '图标'},
+                {field: 'address', title: '家庭住址'},
+                {field: 'partTitle', title: '党组织'},
+                {field: 'positionTitle', title: '职务'},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
@@ -145,20 +223,14 @@
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
-
             //执行搜索重载
-            table.reload('currentTableId', {
+            tableIns.reload({
+                url:"/sys/user/search",
+                where: data.field,
                 page: {
                     curr: 1
                 }
-                , where: {
-                    searchParams: result
-                }
-            }, 'data');
+            });
 
             return false;
         });
@@ -168,7 +240,7 @@
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
+                mainIndex = layer.open({
                     title: '添加用户',
                     type: 1,
                     shade: 0.2,
@@ -176,27 +248,43 @@
                     shadeClose: true,
                     area: ['60%', '80%'],
                     content: $("#addOrUpdateWindow"),
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
+                    success: function () {
+                        $("#dataFrm")[0].reset();
+                        url = "/sys/user/add";
+                    }
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                layer.confirm('确定要删除吗?', function (index) {
+                    var param = "";
+                    for(var i=0;i<data.length;i++){
+                        if (i<data.length-1){
+                            param+=data[i].userId+","
+                        }else{
+                            param+=data[i].userId
+                        }
+                    }
+                    console.log(param)
+                    $.post('/sys/user/delByIds',{"ids":param},function(result){
+                        if(result.code===1){
+                            layer.msg("删除成功!",{time: 800},function (){
+                                tableIns.reload()
+                            });
+                        }else{
+                            layer.msg(result.msg);
+                        }
+                    },"json");
+                    layer.close(index);
+                });
             }
-        });
-
-        //监听表格复选框选择
-        table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
 
-                var index = layer.open({
+                mainIndex = layer.open({
                     title: '编辑用户',
                     type: 1,
                     shade: 0.2,
@@ -204,17 +292,62 @@
                     shadeClose: true,
                     area: ['60%', '80%'],
                     content: $("#addOrUpdateWindow"),
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
+                    success: function () {
+                        console.log(data)
+                        //数据回显
+                        form.val("dataFrm",data);
+                        url = "/sys/user/update";
+                    }
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
+                layer.confirm('确定要删除吗?', function (index) {
+                    console.log(data)
+                    $.post('/sys/user/delById',data,function(result){
+                        if(result.code===1){
+                            layer.msg("删除成功!",{time: 800},function (){
+                                obj.del();
+                            });
+                        }else{
+                            layer.msg(result.msg);
+                        }
+                    },"json");
                     layer.close(index);
                 });
             }
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var data = data.field;
+            var id=/^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}([0-9]|x|X)$/;
+            if(data.sex === ""){
+                layer.msg('性别不能为空',{
+                    icon: 2
+                });
+                return false;
+            }
+            if (id.test(data.idNumber)===false){
+                layer.msg('请输入正确的身份证号',{
+                    icon: 2
+                });
+                return false;
+            }
+
+            $.post(url,data,function(result){
+                if(result.code===1){
+                    layer.msg("保存成功!",{time: 800},function (){
+                        //关闭窗口
+                        layer.close(mainIndex);
+                        tableIns.reload()
+                    });
+                }else{
+                    layer.msg(result.msg);
+                }
+            },"json");
+
+            //禁止页面刷新
+            return false;
         });
 
     });

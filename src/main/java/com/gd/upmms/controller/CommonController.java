@@ -30,7 +30,7 @@ import java.util.UUID;
 @Slf4j
 public class CommonController {
 
-    @Value("${takeout.img.path}")
+    @Value("${upmms.img.path}")
     private String imgPath;
 
     @PostMapping("/upload")
@@ -51,14 +51,13 @@ public class CommonController {
         //新文件名
         String newFileName=uuid+suffixName;
 
-        String uploadPath=imgPath+newFileName;
-
-        log.info("文件上传路径:{}",uploadPath);
-
         try {
+            String  canonicalPath = dir.getCanonicalPath();//获取真实路径
+            String uploadPath=canonicalPath+"/"+newFileName;
+            log.info("文件上传路径:{}",uploadPath);
             file.transferTo(new File(uploadPath));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return R.success(newFileName);
@@ -69,7 +68,7 @@ public class CommonController {
 
         try {
             //输入流，通过输入流读取文件内容
-            FileInputStream fileInputStream = new FileInputStream(new File(imgPath + name));
+            FileInputStream fileInputStream = new FileInputStream(new File(imgPath +"/"+name));
 
             //输出流，通过输出流将文件写回浏览器
             ServletOutputStream outputStream = response.getOutputStream();

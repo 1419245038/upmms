@@ -1,5 +1,6 @@
 package com.gd.upmms.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gd.upmms.common.CustomException;
 import com.gd.upmms.common.R;
@@ -41,19 +42,20 @@ public class SysMenuController {
         SysConfig sysConfig = sysConfService.getOne(null);
         if (sysConfig!=null){
             //HomeInfo信息
-            homeInfo.put("title",sysConfig.getHomeTitle()!=null?sysConfig.getHomeTitle():"首页");
-            homeInfo.put("href",sysConfig.getHomeUrl()!=null?sysConfig.getHomeUrl():"page/welcome-1.html?t=1");
+            homeInfo.put("title", StrUtil.isNotEmpty(sysConfig.getHomeTitle())?sysConfig.getHomeTitle():"首页");
+            homeInfo.put("href",StrUtil.isNotEmpty(sysConfig.getHomeUrl())?sysConfig.getHomeUrl():"page/welcome-1.html?t=1");
             //logoInfo信息
-            logoInfo.put("title",sysConfig.getLogoTitle()!=null?sysConfig.getLogoTitle():"党员管理");
-            logoInfo.put("image",sysConfig.getLogoImage()!=null?sysConfig.getLogoImage():"images/logo.png");
-            logoInfo.put("href",sysConfig.getLogoUrl()!=null?sysConfig.getLogoUrl():"");
+            logoInfo.put("title",StrUtil.isNotEmpty(sysConfig.getLogoTitle())?sysConfig.getLogoTitle():"党员管理");
+            logoInfo.put("image",StrUtil.isNotEmpty(sysConfig.getLogoImage())
+                    && !sysConfig.getLogoImage().equals("/common/download?name=")?sysConfig.getLogoImage():"images/logo/logo.png");
+            logoInfo.put("href",StrUtil.isNotEmpty(sysConfig.getLogoUrl())?sysConfig.getLogoUrl():"");
         }else{
             //HomeInfo信息
             homeInfo.put("title","首页");
             homeInfo.put("href","page/welcome-1.html?t=1");
             //logoInfo信息
             logoInfo.put("title","党员管理");
-            logoInfo.put("image","images/logo.png");
+            logoInfo.put("image","images/logo/logo.png");
             logoInfo.put("href","");
         }
         map.put("menuInfo", TreeUtil.toTree(sysMenuService.findAll(),0));
