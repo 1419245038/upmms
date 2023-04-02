@@ -163,7 +163,7 @@
         $('.login-out').on("click", function () {
             $.post('/sys/logout',function(result){
                 if(result.code===1){
-                    layer.msg('退出登录成功',{icon: 1,time:200}, function () {
+                    layer.msg('退出登录成功',{icon: 1,time:500}, function () {
                         sessionStorage.removeItem("username")
                         sessionStorage.removeItem("userId")
                         window.location = 'login.html';

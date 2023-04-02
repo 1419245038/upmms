@@ -127,7 +127,7 @@
         form.on('submit(login)', function (data) {
             $.post('/sys/login',data.field,function(result){
                 if(result.code===1){
-                    layer.msg("登录成功!",{icon: 1,time:200},function (){
+                    layer.msg("登录成功!",{icon: 1,time:500},function (){
                         sessionStorage.setItem("username",result.data.username);
                         sessionStorage.setItem("userId",result.data.userId)
                         window.location = 'index.html';

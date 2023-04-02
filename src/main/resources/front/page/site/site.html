@@ -155,7 +155,7 @@
         form.on('submit(demo1)', function (data) {
             $.post('/sys/conf/update',{...data.field,"logoImage":logo_image},function(result){
                 if(result.code===1){
-                    layer.msg("保存成功!",{icon:1,time: 200},function (){
+                    layer.msg("保存成功!",{icon:1,time: 500},function (){
                         layer.confirm('站点信息已更新，是否刷新页面?', function(index){
                             parent.location.reload();
                             layer.close(index);
