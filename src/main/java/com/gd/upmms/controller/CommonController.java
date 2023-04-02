@@ -16,15 +16,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-
-/**
- * @author neusoft
- * @version 1.0
- * @project ruiji
- * @description
- * @date 2022/11/22 09:01:48
- */
-
 @RestController
 @RequestMapping("/common")
 @Slf4j

@@ -6,7 +6,6 @@ import com.gd.upmms.common.CustomException;
 import com.gd.upmms.common.R;
 import com.gd.upmms.entity.AdmPart;
 import com.gd.upmms.entity.AdmPartUser;
-import com.gd.upmms.entity.AdmPosition;
 import com.gd.upmms.service.AdmPartService;
 import com.gd.upmms.service.AdmPartUserService;
 import org.springframework.beans.factory.annotation.Autowired;

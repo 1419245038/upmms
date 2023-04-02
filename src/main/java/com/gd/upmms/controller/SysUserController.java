@@ -18,11 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-/**
- * @author ：zhupenghe
- * @date ：created in 2023/03/28 12:43
- * @description :
- */
 @RestController
 @RequestMapping("/sys/user")
 public class SysUserController {

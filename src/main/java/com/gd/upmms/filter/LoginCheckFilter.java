@@ -12,14 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * @author neusoft
- * @version 1.0
- * @project ruiji
- * @description 登录过滤器
- * @date 2022/11/18 10:44:31
- */
-
 @Slf4j
 @WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
 public class LoginCheckFilter implements Filter {

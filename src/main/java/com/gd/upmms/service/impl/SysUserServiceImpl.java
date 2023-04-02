@@ -6,11 +6,6 @@ import com.gd.upmms.mapper.SysUserMapper;
 import com.gd.upmms.service.SysUserService;
 import org.springframework.stereotype.Service;
 
-/**
- * @author ：zhupenghe
- * @date ：created in 2023/03/28 12:42
- * @description :
- */
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 }

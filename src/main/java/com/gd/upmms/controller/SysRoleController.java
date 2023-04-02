@@ -16,11 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author ：zhupenghe
- * @date ：created in 2023/03/28 13:21
- * @description :
- */
 @RestController
 @RequestMapping("/sys/role")
 public class SysRoleController {
