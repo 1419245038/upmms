@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>党费缴纳登记</legend>
+        </fieldset>
+
+        <form class="layui-form layuimini-form" id="dataFrm" lay-filter="dataFrm">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">缴费日期</label>
+                <div class="layui-input-block">
+                    <input type="text" id="payment" name="payment" lay-verify="required" lay-reqtext="缴费日期不能为空" autocomplete="off" placeholder="请选择缴费日期" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">缴费金额</label>
+                <div class="layui-input-block">
+                    <input type="text" name="money" lay-verify="required" lay-reqtext="缴费金额不能为空" autocomplete="off" placeholder="请输入缴费金额" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">缴费凭证</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test1">上传图片</button>
+                        <div class="layui-upload-list">
+                            <img style="width: 92px;height: 92px" class="layui-upload-img" id="demo1">
+                            <p id="demoText"></p>
+                        </div>
+                        <div style="width: 95px;">
+                            <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                                <div class="layui-progress-bar" lay-percent=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form','upload','element','laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            element = layui.element,
+            layer = layui.layer,
+            upload = layui.upload,
+            laydate = layui.laydate,
+            isUpload = false;
+            image_url = '/common/download?name=';
+
+        laydate.render({
+            elem: '#payment' //指定元素
+        });
+
+        //图片上传
+        var uploadInst = upload.render({
+            elem: '#test1',
+            url: '/common/upload', //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+            before: function(obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+
+                element.progress('demo', '0%'); //进度条复位
+                layer.msg('上传中', {
+                    icon: 16,
+                    time: 0
+                });
+            },
+            done: function(res) {
+                //如果上传失败
+                if (res.code === 0) {
+                    isUpload=false;
+                    return layer.msg('上传失败');
+                }
+                //如果上传成功
+                if (res.code === 1){
+                    isUpload=true;
+                    image_url+=res.data
+                }
+                $('#demoText').html(''); //置空上传失败的状态
+            },
+            error: function() {
+                //失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function() {
+                    uploadInst.upload();
+                });
+            },
+            //进度条
+            progress: function(n, elem, e) {
+                element.progress('demo', n + '%');
+                if (n === 100) {
+                    layer.msg('上传完毕', {
+                        icon: 1
+                    });
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            if (!isUpload){
+                layer.msg('缴费凭证不能为空!', {
+                    icon: 2
+                });
+                return false;
+            }
+            console.log(data)
+            $.post('/adm/record/add',{...data.field,"username":sessionStorage.getItem("username"),"image":image_url},function(result){
+                if(result.code===1){
+                    layer.msg("保存成功!",{icon:1,time: 500});
+                }else{
+                    layer.msg(result.msg);
+                }
+            },"json");
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>

@@ -19,5 +19,6 @@ mybatis-plus:
       id-type: auto
 
 upmms:
-  img:
-    path: D:/upmms/images
+  path:
+    img: D:/upmms/images
+    file: D:/upmms/files

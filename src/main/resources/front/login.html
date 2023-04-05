@@ -129,7 +129,7 @@
                 if(result.code===1){
                     layer.msg("登录成功!",{icon: 1,time:500},function (){
                         sessionStorage.setItem("username",result.data.username);
-                        sessionStorage.setItem("userId",result.data.userId)
+                        // sessionStorage.setItem("userId",result.data.userId)
                         window.location = 'index.html';
                     });
                 }else{

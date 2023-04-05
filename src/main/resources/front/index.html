@@ -165,7 +165,7 @@
                 if(result.code===1){
                     layer.msg('退出登录成功',{icon: 1,time:500}, function () {
                         sessionStorage.removeItem("username")
-                        sessionStorage.removeItem("userId")
+                        // sessionStorage.removeItem("userId")
                         window.location = 'login.html';
                     });
                 }else{

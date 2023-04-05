@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <link rel="stylesheet" href="../../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+    <style>
+        .layui-table-cell{
+            text-align:center;
+            height:auto;
+            white-space:normal;
+        }
+    </style>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">缴费日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="payment" id="payment" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+    </div>
+</div>
+<script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'table','form'], function () {
+        var table = layui.table,
+            laydate = layui.laydate,
+            form = layui.form;
+
+        laydate.render({
+            elem: '#payment' //指定元素
+        });
+
+        var tableIns = table.render({
+            elem: '#currentTableId',
+            url: '/adm/record/getByCurrentId',
+            response:{message:"msg",statusCode:1},
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                {type: "checkbox"},
+                {type: 'numbers',title: '序号'},
+                {field: 'username', title: '用户名'},
+                {field: 'payment', title: '缴纳时间'},
+                {field: 'money', title: '缴纳金额'},
+                {field: 'image', templet: function (d) {
+                        return "<img style=\"width: 92px;height: 92px\" src="+d.image+">";
+                    }, title: '缴纳凭证'},
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            tableIns.reload({
+                url:"/adm/record/search",
+                where: data.field,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>

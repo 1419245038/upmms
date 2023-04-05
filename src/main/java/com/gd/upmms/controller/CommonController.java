@@ -21,14 +21,47 @@ import java.util.UUID;
 @Slf4j
 public class CommonController {
 
-    @Value("${upmms.img.path}")
+    @Value("${upmms.path.img}")
     private String imgPath;
+
+    @Value("${upmms.path.file}")
+    private String filePath;
 
     @PostMapping("/upload")
     public R<String> upload(MultipartFile file){
 
         //文件上传路径
         File dir=new File(imgPath);
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+
+        //原始文件名
+        String originalFilename = file.getOriginalFilename();
+        //文件后缀名
+        String suffixName = originalFilename.substring(originalFilename.lastIndexOf("."));
+        //使用uuid作为新文件名
+        UUID uuid = UUID.randomUUID();
+        //新文件名
+        String newFileName=uuid+suffixName;
+
+        try {
+            String  canonicalPath = dir.getCanonicalPath();//获取真实路径
+            String uploadPath=canonicalPath+"/"+newFileName;
+            log.info("文件上传路径:{}",uploadPath);
+            file.transferTo(new File(uploadPath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return R.success(newFileName);
+    }
+
+    @PostMapping("/upload/file")
+    public R<String> uploadFile(MultipartFile file){
+
+        //文件上传路径
+        File dir=new File(filePath);
         if (!dir.exists()){
             dir.mkdirs();
         }
