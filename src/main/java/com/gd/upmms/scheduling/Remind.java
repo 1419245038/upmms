@@ -2,13 +2,10 @@ package com.gd.upmms.scheduling;
 
 import cn.hutool.extra.mail.MailUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gd.upmms.common.R;
-import com.gd.upmms.dto.SysUserDto;
 import com.gd.upmms.entity.*;
 import com.gd.upmms.service.AdmPartUserService;
 import com.gd.upmms.service.AdmRecordService;
 import com.gd.upmms.service.SysUserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
