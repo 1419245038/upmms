@@ -22,77 +22,46 @@
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main layui-top-box">
-        <div class="layui-row layui-col-space10">
-
-            <div class="layui-col-md3">
-                <div class="col-xs-6 col-md-3">
-                    <div class="panel layui-bg-cyan">
-                        <div class="panel-body">
-                            <div class="panel-title">
-                                <span class="label pull-right layui-bg-blue">实时</span>
-                                <h5>党员</h5>
-                            </div>
-                            <div class="panel-content">
-                                <h1 class="no-margins">1234人</h1>
-                                <div class="stat-percent font-bold text-gray"><i class="fa fa-group"></i></div>
-                            </div>
-                        </div>
+        <div id="view" class="layui-row layui-col-space10">
+            <!-- 使用模板引擎来渲染 -->
+        </div>
+    </div>
+</div>
+<script src="js/template-web.js"></script>
+<script src="lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<!-- 模板start -->
+<script id="view-item" type="text/html">
+    {{each data}}
+    <div class="layui-col-md3">
+        <div class="col-xs-6 col-md-3">
+            <div class="panel layui-bg-cyan">
+                <div class="panel-body">
+                    <div class="panel-title">
+                        <span class="label pull-right layui-bg-blue">实时</span>
+                        <h5>{{$value.name}}统计</h5>
                     </div>
-                </div>
-            </div>
-
-            <div class="layui-col-md3">
-                <div class="col-xs-6 col-md-3">
-                    <div class="panel layui-bg-blue">
-                        <div class="panel-body">
-                            <div class="panel-title">
-                                <span class="label pull-right layui-bg-cyan">实时</span>
-                                <h5>预备党员</h5>
-                            </div>
-                            <div class="panel-content">
-                                <h1 class="no-margins">1234人</h1>
-                                <div class="stat-percent font-bold text-gray"><i class="fa fa-group"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="layui-col-md3">
-                <div class="col-xs-6 col-md-3">
-                    <div class="panel layui-bg-green">
-                        <div class="panel-body">
-                            <div class="panel-title">
-                                <span class="label pull-right layui-bg-orange">实时</span>
-                                <h5>积极分子</h5>
-                            </div>
-                            <div class="panel-content">
-                                <h1 class="no-margins">1234人</h1>
-                                <div class="stat-percent font-bold text-gray"><i class="fa fa-group"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-col-md3">
-                <div class="col-xs-6 col-md-3">
-                    <div class="panel layui-bg-orange">
-                        <div class="panel-body">
-                            <div class="panel-title">
-                                <span class="label pull-right layui-bg-green">实时</span>
-                                <h5>群众</h5>
-                            </div>
-                            <div class="panel-content">
-                                <h1 class="no-margins">1234人</h1>
-                                <div class="stat-percent font-bold text-gray"><i class="fa fa-group"></i></div>
-                            </div>
-                        </div>
+                    <div class="panel-content">
+                        <h1 class="no-margins">{{$value.count}}人</h1>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script src="lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    {{/each}}
+</script>
+<!-- 模板end -->
+<script>
+    var $ = layui.jquery;
+    $(function () {
+        $.post('/welcome/get',function(result){
+            if(result.code===1){
+                var item = template('view-item', result);
+                $("#view").html(item)
+            }else{
+                layer.msg(result.msg);
+            }
+        },"json");
+    })
+</script>
 </body>
 </html>
