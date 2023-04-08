@@ -3,6 +3,7 @@ package com.gd.upmms.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.mail.MailUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gd.upmms.common.CustomException;
 import com.gd.upmms.common.R;
 import com.gd.upmms.dto.SysUserDto;
 import com.gd.upmms.entity.*;
@@ -73,6 +74,8 @@ public class RemindController {
             int count = admRecordService.count(queryWrapper);
             if (count<1){
                 unPayUserIds.add(partUserId);
+            }else{
+                throw new CustomException("无数据");
             }
         }
         //获取未缴费的用户信息
