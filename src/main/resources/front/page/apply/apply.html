@@ -19,6 +19,14 @@
 
         <form class="layui-form layuimini-form" id="dataFrm" lay-filter="dataFrm">
             <div class="layui-form-item">
+                <label class="layui-form-label required">党组织</label>
+                <div class="layui-input-block">
+                    <select id="part_select" name="partId">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label required">入党申请书</label>
                 <div class="layui-input-block">
                     <div class="layui-upload">
@@ -63,6 +71,20 @@
             isUpload = false,
             file_path = '/common/download?name=';
 
+        //初始化下拉列表
+        $(function(){
+            //初始化党组织下拉列表
+            $.post('/adm/part/get',function(result){
+                if (result.code===1){
+                    var data=result.data
+                    $.each(data,function(index,item){
+                        $('#part_select').append(new Option(item.partTitle,item.partId));//往下拉菜单里添加元素
+                    })
+                    form.render();//重载表单
+                }
+            },"json");
+        })
+
         //指定允许上传的文件类型
         upload.render({
             elem: '#test3',
@@ -94,6 +116,12 @@
 
         //监听提交
         form.on('submit(demo1)', function (data) {
+            if(data.field.partId === ""){
+                layer.msg('党组织不能为空',{
+                    icon: 2
+                });
+                return false;
+            }
             if (!isUpload){
                 layer.msg('请上传入党申请书!', {
                     icon: 2
