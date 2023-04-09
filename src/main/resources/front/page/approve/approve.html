@@ -49,22 +49,40 @@
 <div style="display: none;padding: 5px" id="addOrUpdateWindow">
     <form class="layui-form layuimini-form" style="width:90%;" id="dataFrm" lay-filter="dataFrm">
         <div class="layui-form-item">
-            <input type="hidden" name="roleId">
-            <label class="layui-form-label required">角色名称</label>
+            <input type="hidden" name="userId">
+            <input type="hidden" name="formId">
+            <input type="hidden" name="partId">
+            <label class="layui-form-label">姓名</label>
             <div class="layui-input-block">
-                <input type="text" name="roleName" lay-verify="required" lay-reqtext="角色名称不能为空" placeholder="请输入角色名称" autocomplete="off" value="" class="layui-input">
+                <input type="text" name="username" autocomplete="off" disabled readonly class="layui-input layui-disabled">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">角色描述</label>
+            <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
-                <input type="text" name="roleDescription" placeholder="请输入角色描述" autocomplete="off" class="layui-input">
+                <input type="text" name="remark"  autocomplete="off" disabled readonly class="layui-input layui-disabled">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">角色权限</label>
+            <label class="layui-form-label">申请时间</label>
             <div class="layui-input-block">
-                <ul id="menuSelectTree" class="dtree" data-id="0"></ul>
+                <input type="text" name="createTime"  autocomplete="off" disabled readonly class="layui-input layui-disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">审批结果</label>
+            <div class="layui-input-block">
+                <select name="result">
+                    <option value=""></option>
+                    <option value="approved">同意</option>
+                    <option value="refused">驳回</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">审批意见</label>
+            <div class="layui-input-block">
+                <input type="text" name="reason"  lay-verify="required" lay-reqtext="审批意见不能为空" placeholder="请输入审批意见" autocomplete="off"  class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -82,12 +100,13 @@
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table,
-            element = layui.element;
+            element = layui.element,
+            orderNo,mainIndex;
 
         //入党积极分子审批
-        var tableIns = table.render({
+        var tableIns1 = table.render({
             elem: '#currentTableId1',
-            url: '/adm/approve/get',
+            url: '/adm/approve/get?orderNo=2',
             response:{message:"msg",statusCode:1},
             cols: [[
                 {type: 'numbers',title: '序号'},
@@ -110,7 +129,7 @@
                 if (curr > 1 && res.data.length === 0) {
                     var pageValue = curr - 1;
                     //刷新数据表格的数据
-                    tableIns.reload({
+                    tableIns1.reload({
                         page: {curr: pageValue}
                     });
                 }
@@ -118,9 +137,9 @@
         });
 
         //预备党员审批
-        var tableIns = table.render({
+        var tableIns2 = table.render({
             elem: '#currentTableId2',
-            url: '/adm/approve/get',
+            url: '/adm/approve/get?orderNo=3',
             response:{message:"msg",statusCode:1},
             cols: [[
                 {type: 'numbers',title: '序号'},
@@ -143,7 +162,7 @@
                 if (curr > 1 && res.data.length === 0) {
                     var pageValue = curr - 1;
                     //刷新数据表格的数据
-                    tableIns.reload({
+                    tableIns2.reload({
                         page: {curr: pageValue}
                     });
                 }
@@ -151,9 +170,9 @@
         });
 
         //正式党员审批
-        var tableIns = table.render({
+        var tableIns3 = table.render({
             elem: '#currentTableId3',
-            url: '/adm/approve/get',
+            url: '/adm/approve/get?orderNo=4',
             response:{message:"msg",statusCode:1},
             cols: [[
                 {type: 'numbers',title: '序号'},
@@ -176,7 +195,7 @@
                 if (curr > 1 && res.data.length === 0) {
                     var pageValue = curr - 1;
                     //刷新数据表格的数据
-                    tableIns.reload({
+                    tableIns3.reload({
                         page: {curr: pageValue}
                     });
                 }
@@ -188,7 +207,7 @@
             var data = obj.data;
             if (obj.event === 'approve') {
                 console.log(data)
-                layer.open({
+                mainIndex = layer.open({
                     title: '入党积极分子审批',
                     type: 1,
                     shade: 0.2,
@@ -196,7 +215,10 @@
                     area: ['60%', '80%'],
                     content: $("#addOrUpdateWindow"),
                     success: function () {
-                        $("#dataFrm")[0].reset();
+                        //数据回显
+                        data.createTime=layui.util.toDateString(data.createTime, 'yyyy-MM-dd')
+                        form.val("dataFrm",data);
+                        orderNo = 2;
                     }
                 });
             }
@@ -207,7 +229,7 @@
             var data = obj.data;
             if (obj.event === 'approve') {
                 console.log(data)
-                layer.open({
+                mainIndex = layer.open({
                     title: '预备党员审批',
                     type: 1,
                     shade: 0.2,
@@ -215,7 +237,10 @@
                     area: ['60%', '80%'],
                     content: $("#addOrUpdateWindow"),
                     success: function () {
-                        $("#dataFrm")[0].reset();
+                        //数据回显
+                        data.createTime=layui.util.toDateString(data.createTime, 'yyyy-MM-dd')
+                        form.val("dataFrm",data);
+                        orderNo = 3;
                     }
                 });
             }
@@ -226,7 +251,7 @@
             var data = obj.data;
             if (obj.event === 'approve') {
                 console.log(data)
-                layer.open({
+                mainIndex = layer.open({
                     title: '正式党员审批',
                     type: 1,
                     shade: 0.2,
@@ -234,7 +259,10 @@
                     area: ['60%', '80%'],
                     content: $("#addOrUpdateWindow"),
                     success: function () {
-                        $("#dataFrm")[0].reset();
+                        //数据回显
+                        data.createTime=layui.util.toDateString(data.createTime, 'yyyy-MM-dd')
+                        form.val("dataFrm",data);
+                        orderNo = 4;
                     }
                 });
             }
@@ -242,7 +270,27 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            var data = data.field;
             console.log(data)
+            if(data.result === ""){
+                layer.msg('审批结果不能为空',{
+                    icon: 2
+                });
+                return false;
+            }
+            $.post('/adm/approve/approve',{...data,"orderNo":orderNo},function(result){
+                if(result.code===1){
+                    layer.msg("保存成功!",{icon:1,time: 500},function (){
+                        //关闭窗口
+                        layer.close(mainIndex);
+                        tableIns1.reload()
+                        tableIns2.reload()
+                        tableIns3.reload()
+                    });
+                }else{
+                    layer.msg(result.msg);
+                }
+            },"json");
             //禁止页面刷新
             return false;
         });

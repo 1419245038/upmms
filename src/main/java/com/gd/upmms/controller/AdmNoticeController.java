@@ -47,6 +47,7 @@ public class AdmNoticeController {
             AdmPartUser partUser = admPartUserService.getOne(admPartUserLambdaQueryWrapper);
             LambdaQueryWrapper<AdmNotice> admNoticeLambdaQueryWrapper1=new LambdaQueryWrapper<>();
             admNoticeLambdaQueryWrapper1.eq(AdmNotice::getPartId,partUser.getPartId());
+            admNoticeLambdaQueryWrapper1.orderByDesc(AdmNotice::getCreateTime);
             admNotices = admNoticeService.list(admNoticeLambdaQueryWrapper1);
         }else {
             admNotices = admNoticeService.list(admNoticeLambdaQueryWrapper);
