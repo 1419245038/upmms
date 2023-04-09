@@ -19,6 +19,8 @@ public class AdmApplyForm {
     @TableField("user_id")
     private Integer userId;
 
+    private String username;
+
     @TableField("part_id")
     private Integer partId;
 

@@ -43,7 +43,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">备注</label>
                 <div class="layui-input-block">
-                    <input type="text" name="remarks" autocomplete="off" placeholder="请输入备注" class="layui-input">
+                    <input type="text" name="remark" autocomplete="off" placeholder="请输入备注" class="layui-input">
                 </div>
 
             </div>
@@ -69,7 +69,7 @@
             layer = layui.layer,
             upload = layui.upload,
             isUpload = false,
-            file_path = '/common/download?name=';
+            file_url = '';
 
         //初始化下拉列表
         $(function(){
@@ -101,6 +101,7 @@
                 if (res.code === 1){
                     isUpload=true;
                     console.log(res.data)
+                    file_url=res.data
                 }
             },
             //进度条
@@ -128,7 +129,17 @@
                 });
                 return false;
             }
-            console.log(data)
+            console.log(data,file_url)
+            $.post("/adm/apply",{...data.field,"username":sessionStorage.getItem("username"),"fileUrl":file_url},function(result){
+                if(result.code===1){
+                    layer.msg("保存成功!",{icon:1,time: 500},function (){
+                        //关闭窗口
+                        layer.close(mainIndex);
+                    });
+                }else{
+                    layer.msg(result.msg);
+                }
+            },"json");
             return false;
         });
 
