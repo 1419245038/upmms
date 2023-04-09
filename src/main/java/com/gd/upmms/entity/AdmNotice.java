@@ -19,6 +19,9 @@ public class AdmNotice {
     @TableField("receiver_id")
     private Integer receiverId;
 
+    @TableField("part_id")
+    private Integer partId;
+
     private String content;
 
     private Date createTime;
