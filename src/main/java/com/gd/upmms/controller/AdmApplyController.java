@@ -49,7 +49,8 @@ public class AdmApplyController {
 
         //判断用户是否重复提交入党申请
         LambdaQueryWrapper<AdmApplyForm> admApplyFormLambdaQueryWrapper=new LambdaQueryWrapper<>();
-        admApplyFormLambdaQueryWrapper.eq(AdmApplyForm::getUserId,BaseContext.getCurrentId());
+        admApplyFormLambdaQueryWrapper.eq(AdmApplyForm::getUserId,BaseContext.getCurrentId()); //当前用户有入党申请记录
+        admApplyFormLambdaQueryWrapper.ne(AdmApplyForm::getState,"refused"); //当前用户的入党申请未被驳回
         int count = admApplyFormService.count(admApplyFormLambdaQueryWrapper);
         if (count>0){
             throw new CustomException("不可重复提交入党申请!");
