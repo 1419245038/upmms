@@ -45,7 +45,7 @@
     </div>
 </div>
 
-<!-- 新增或修改弹窗 -->
+<!-- 审批弹窗 -->
 <div style="display: none;padding: 5px" id="addOrUpdateWindow">
     <form class="layui-form layuimini-form" style="width:90%;" id="dataFrm" lay-filter="dataFrm">
         <div class="layui-form-item">
@@ -188,6 +188,17 @@
             var data = obj.data;
             if (obj.event === 'approve') {
                 console.log(data)
+                layer.open({
+                    title: '入党积极分子审批',
+                    type: 1,
+                    shade: 0.2,
+                    shadeClose: true,
+                    area: ['60%', '80%'],
+                    content: $("#addOrUpdateWindow"),
+                    success: function () {
+                        $("#dataFrm")[0].reset();
+                    }
+                });
             }
         });
 
@@ -196,6 +207,17 @@
             var data = obj.data;
             if (obj.event === 'approve') {
                 console.log(data)
+                layer.open({
+                    title: '预备党员审批',
+                    type: 1,
+                    shade: 0.2,
+                    shadeClose: true,
+                    area: ['60%', '80%'],
+                    content: $("#addOrUpdateWindow"),
+                    success: function () {
+                        $("#dataFrm")[0].reset();
+                    }
+                });
             }
         });
 
@@ -204,6 +226,17 @@
             var data = obj.data;
             if (obj.event === 'approve') {
                 console.log(data)
+                layer.open({
+                    title: '正式党员审批',
+                    type: 1,
+                    shade: 0.2,
+                    shadeClose: true,
+                    area: ['60%', '80%'],
+                    content: $("#addOrUpdateWindow"),
+                    success: function () {
+                        $("#dataFrm")[0].reset();
+                    }
+                });
             }
         });
 

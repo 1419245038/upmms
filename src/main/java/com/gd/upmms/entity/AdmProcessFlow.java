@@ -22,6 +22,11 @@ public class AdmProcessFlow {
     @TableField("operator_id")
     private Integer operatorId;
 
+    private String username;
+
+    @TableField("part_id")
+    private Integer partId;
+
     private String action;
 
     private String result;
