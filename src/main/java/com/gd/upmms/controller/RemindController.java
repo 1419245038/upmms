@@ -49,7 +49,7 @@ public class RemindController {
 
     /**
      * 获取本月未缴纳党费的用户信息
-     * @return
+     * @return R<List<SysUserDto>>
      */
     @RequestMapping("/getUnPayUser")
     public R<List<SysUserDto>> getUnPayUser(){
@@ -72,11 +72,15 @@ public class RemindController {
             queryWrapper.eq(AdmRecord::getUserId,partUserId);
             queryWrapper.like(AdmRecord::getPayment,currentDate);
             int count = admRecordService.count(queryWrapper);
-            if (count<1){
+            if (count<1) {
                 unPayUserIds.add(partUserId);
-            }else{
-                throw new CustomException("无数据");
             }
+//            }else{
+//                throw new CustomException("无数据");
+//            }
+        }
+        if (unPayUserIds.isEmpty()){
+            throw new CustomException("无数据");
         }
         //获取未缴费的用户信息
         LambdaQueryWrapper<SysUser> queryWrapper=new LambdaQueryWrapper<>();
